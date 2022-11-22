@@ -41,7 +41,7 @@ void ArrowSourceTranslator::codegen(Context& context) {
   JITFunction* func = context.query_func_;
   auto inputs = node_.getOutputExprs();
   // get ArrowArray pointer
-  auto arrow_pointer = func->getArgument(0);
+  auto arrow_pointer = func->getArgument(1);
   for (int64_t index = 0; index < inputs.size(); ++index) {
     auto jit_index = func->createConstant(JITTypeTag::INT64, index);
     // extract ArrowArray null buffer
@@ -49,7 +49,7 @@ void ArrowSourceTranslator::codegen(Context& context) {
         "extract_arrow_array_null",
         JITFunctionEmitDescriptor{
             .ret_type = JITTypeTag::POINTER,
-            .sub_type = JITTypeTag::VOID,
+            .ret_sub_type = JITTypeTag::VOID,
             .params_vector = {{arrow_pointer.get(), jit_index.get()}}});
 
     // extract ArrowArray data buffer
@@ -57,7 +57,7 @@ void ArrowSourceTranslator::codegen(Context& context) {
         "extract_arrow_array_data",
         JITFunctionEmitDescriptor{
             .ret_type = JITTypeTag::POINTER,
-            .sub_type = JITTypeTag::VOID,
+            .ret_sub_type = JITTypeTag::VOID,
             .params_vector = {{arrow_pointer.get(), jit_index.get()}}});
 
     inputs[index]->set_nulls(null_data);
