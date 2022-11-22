@@ -47,6 +47,7 @@ struct JITFunctionDescriptor {
 struct JITFunctionEmitDescriptor {
   static constexpr size_t DefaultParamsNum = 8;
   JITTypeTag ret_type;
+  JITTypeTag sub_type = JITTypeTag::INVALID;
   boost::container::small_vector<JITValue*, DefaultParamsNum> params_vector;
 };
 
